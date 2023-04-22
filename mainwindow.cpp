@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_read_clicked()
+void MainWindow::on_read_clicked() //250Hz
 {
 
     ui->read->setEnabled(false);
@@ -45,7 +45,7 @@ void MainWindow::on_read_clicked()
     else
     {
         address = ui->address->text();
-        offset = ui->offset->text().toUInt();
+        offset = ui->offset->text().toULongLong();
         times = ui->times->text().toInt();
         datanum = ui->datanum->text().toInt();
         headnum = ui->headnum->text().toInt();
@@ -59,7 +59,7 @@ void MainWindow::on_read_clicked()
 
 }
 
-//显示5s,若数据不足5s则显示5s内的数据
+//显示5s,若数据不足5s则显示5s内的数据 250Hz
 void MainWindow::plotGraph_preview(const vector<double> &axisX, const vector<vector<double>> &axisCH)
 {
     ecgGraph_preview->clearAllGraph();
@@ -79,13 +79,13 @@ void MainWindow::plotGraph_preview(const vector<double> &axisX, const vector<vec
     vector<double> X(axisX.begin(),axisX.begin()+(initlen*250));
     ecgGraph_preview->setxAxisRange(X.at(0),X.at(X.size()-1));
     qDebug() << "横轴尺寸" << X.size();
-    ecgGraph_preview->setyAxisRange(-6,12);
+    ecgGraph_preview->setyAxisRange(-5,8);
 //    ecgGraph_preview->setGrid();
 //    QStringList list = {"1","2","3","4","5","6","7","8"};
     for(size_t i=0;i<axisCH.size();++i)
     {
         vector<double> Y(axisCH.at(i).begin(),axisCH.at(i).begin()+(initlen*250));
-        for_each(Y.begin(), Y.end(), [=](double &a){a = a*0.12 + (6-i)*1.2;});
+        for_each(Y.begin(), Y.end(), [=](double &a){a = a*0.08 + (6-i)*0.8;});
 //        ecgGraph_preview->addText(list[int(i)],0,0.08*i+0.05);
         ecgGraph_preview->plot(X,Y);
     }
@@ -95,6 +95,7 @@ void MainWindow::plotGraph_preview(const vector<double> &axisX, const vector<vec
 void MainWindow::initialize_Plot()
 {
     ecgGraph_preview = new ECGGraph(ui->customplot_preview);
+    ecgGraph_preview_2 = new ECGGraph(ui->customplot_preview_2);
 }
 
 //初始化滑块
@@ -137,3 +138,56 @@ void MainWindow::initializ_Slider(int length)
 //    }
 
 //}
+
+void MainWindow::on_read_2_clicked() //8000Hz
+{
+    ui->read_2->setEnabled(false);
+    if(ui->address_2->text().trimmed()==""||ui->offset_2->text().trimmed()==""||ui->times_2->text().trimmed()==""||ui->datanum_2->text().trimmed()==""||ui->headnum_2->text().trimmed()==""||ui->effnum_2->text().trimmed()=="")
+    {
+      QMessageBox::warning(this,"警告","输入参数不能为空！");
+      ui->read_2->setEnabled(true);
+    }
+    else
+    {
+        address_2 = ui->address_2->text();
+        offset_2 = ui->offset_2->text().toULongLong();
+        times_2 = ui->times_2->text().toInt();
+        datanum_2 = ui->datanum_2->text().toInt();
+        headnum_2 = ui->headnum_2->text().toInt();
+        effnum_2 = ui->effnum_2->text().toInt();
+        idatlength_2 = (times_2*effnum_2-1)/24000+1; //3*8000
+
+
+        emit readfromdisk_2();//发送读取信号
+    }
+
+
+}
+
+//显示5s,若数据不足5s则显示5s内的数据 250Hz
+void MainWindow::plotGraph_preview2(const vector<double> &axisX, const vector<double> &axisCH)
+{
+    ecgGraph_preview_2->clearAllGraph();
+    ecgGraph_preview_2->setHeight(int(ui->scrollAreaWidgetContents_2->height()));
+
+//    QString timeText = DateTime.addSecs(int(position/8000)).toString("yyyy-MM-dd hh:mm:ss");
+//    ecgGraph_preview->addTimeText(timeText);
+    int initlen;
+    if(idatlength_2<5)
+    {
+        initlen = idatlength_2;
+    }
+    else
+    {
+        initlen = 5;
+    }
+    vector<double> X(axisX.begin(),axisX.begin()+(initlen*8000));
+    ecgGraph_preview_2->setxAxisRange(X.at(0),X.at(X.size()-1));
+    qDebug() << "横轴尺寸" << X.size();
+    ecgGraph_preview_2->setyAxisRange(-10,10);
+//    ecgGraph_preview->setGrid();
+//    QStringList list = {"1","2","3","4","5","6","7","8"};
+    vector<double> Y(axisCH.begin(),axisCH.begin()+(initlen*8000));
+    ecgGraph_preview_2->plot(X,Y);
+    //ecgGraph_preview->getCustomPlot()->replot();
+}

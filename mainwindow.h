@@ -27,15 +27,16 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void plotGraph_preview(const vector<double> &axisX, const vector<vector<double>> &axisCH);
+    void plotGraph_preview2(const vector<double> &axisX, const vector<double> &axisCH);
 //    QDateTime DateTime;
 
     void initialize_Plot();  //初始化图像
     void initializ_Slider(int length);//初始化滑块
 //    void plotGraph_view(const vector<double> &axisX,const vector<vector<double>> &axisCH);
 
-    //在ui上读取磁盘的相关参数
+    //在ui上读取磁盘的相关参数 250Hz
     QString address;
-    uint offset;
+    qint64 offset;
     int times;
     int datanum;
     int headnum;
@@ -45,21 +46,35 @@ public:
     int isliderlen; //代表滑块长度
     bool sliderflag; //滑块标志位
 
+    //8000Hz
+    QString address_2;
+    qint64 offset_2;
+    int times_2;
+    int datanum_2;
+    int headnum_2;
+    int effnum_2;
+    int idatlength_2;
+
+
 private slots:
 
     void on_read_clicked();  //ui界面中读取槽函数
 
 
 
+    void on_read_2_clicked();
+
 private:
     Ui::MainWindow *ui;
 
-    ECGGraph *ecgGraph_preview;   //开始显示8个通道
+    ECGGraph *ecgGraph_preview;   //250Hz 7个通道
+    ECGGraph *ecgGraph_preview_2;   //8000Hz
 
 
 signals:
 
     void readfromdisk();
+    void readfromdisk_2();
     void SliderValueChange(int position);
 
 };

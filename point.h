@@ -11,11 +11,13 @@ public:
     int decode();    
     void push(const BYTE &b);
     int savedat(int);
+    int savedat2(int);
     FILE *file;
 
 private:
     BYTE m_data[BUFFER_SIZE];
     static BYTE onewrite[ONEWRITE_SIZE];
+    static BYTE onewrite2[ONEWRITE_SIZE2];
     int cur;
     static int writenum;
     static int timenum;

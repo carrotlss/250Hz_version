@@ -7,12 +7,23 @@ void Consumer::run(){
         Point p;
 
         int res=MyQueue::getGlobalInstance().get(&p);
-        int filestop = p.savedat((res));
-
-        if(filestop)
+        if(mode == 1)
         {
-            emit savdatnum(filestop);
+            int filestop = p.savedat((res));
+            if(filestop)
+            {
+                emit savdatnum(filestop);
+            }
         }
+        else if(mode == 2)
+        {
+            int filestop = p.savedat2((res));
+            if(filestop)
+            {
+                emit savdatnum(filestop);
+            }
+        }
+
 
         if(res!=0){
             qDebug()<<"消费者出错或者结束";

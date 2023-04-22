@@ -11,6 +11,7 @@ class Consumer : public QThread
     Q_OBJECT
 public:
     void run();
+    int mode;
 signals:
     void savdatnum(int);
     void consumerstopflag();

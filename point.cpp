@@ -9,6 +9,7 @@ int Point::writenum = 0;
 int Point::timenum = 0;
 int Point::filenum = 0;
 BYTE Point::onewrite[ONEWRITE_SIZE];
+BYTE Point::onewrite2[ONEWRITE_SIZE2];
 
 Point::Point(){
     m_data[PACKAGE_SIZE]=0x00;
@@ -192,6 +193,165 @@ int Point::savedat(int res){
         timenum++;
     }
     if(timenum>=WRITIMES)
+    {
+        filenum += 1;
+        writenum = 0;
+        timenum = 0;
+
+    }
+    return filenum;
+}
+
+int Point::savedat2(int res){
+
+//    timeT = timefolder;
+    //    FILE *file = fopen("D:/lusisi/qt_study/savedata_0.dat","wb");
+//        QString aFileName = QString("D:\\lusisi\\qt_study\\2023.4.14\\storage\\%1\\savedata_%2.dat").arg(timeT).arg(filenum);
+          QString aFileName = QString("D:\\lusisi\\qt_study\\2023.4.19\\storage\\savedata2_%1.dat").arg(filenum);
+    //    file = fopen(aFileName.toLocal8Bit().data(),"w+");
+
+
+    if(res==-1)
+    {
+        if(writenum == 0)
+        {
+//            if(timenum%8 == 0)
+//            {
+//                filenum += 1;
+//                timenum = 0;
+////                qDebug() << filenum;
+//                return filenum;
+//            }
+//            else
+//            {
+//                for(int i=0;i<ONEWRITE_SIZE2;++i){
+//                    onewrite2[i] = 0;
+//                }
+//                for(int i =0; i<8-(timenum%8); i++)
+//                {
+//                    FILE *file = fopen(aFileName.toStdString().c_str(),"ab");
+//                    if(!file)
+//                    {
+//                        qDebug() << "fail to open the file";
+//                        return 0;
+//                    }
+//                    fseek(file,(timenum+i)*ONEWRITE_SIZE2,SEEK_SET);
+//                    size_t re_read = fwrite(onewrite2,1,ONEWRITE_SIZE2,file);
+//                    if(re_read == 0)
+//                    {
+//                        qDebug() << "未写入成功";
+//        //                delete read_data_buff_stop;
+//                        fclose(file);
+//                        return 0;
+//                    }
+
+//                    fclose(file);
+
+//                }
+//                filenum += 1;
+//                timenum = 0;
+//    //            qDebug() << filenum;
+//                return filenum;
+//            }
+            filenum += 1;
+            timenum = 0;
+            return filenum;
+        }
+        else
+        {
+
+            FILE *file = fopen(aFileName.toStdString().c_str(),"ab");
+            if(!file)
+            {
+                qDebug() << "fail to open the file";
+                return 0;
+            }
+            for(int i=writenum;i<ONEWRITE_SIZE2;++i){
+                onewrite2[i] = 0;
+            }
+
+            fseek(file,timenum*ONEWRITE_SIZE2,SEEK_SET);
+//            BYTE* read_data_buff_stop = onewrite;
+//            read_data_buff_stop = new BYTE[writenum];  //缓存区
+            size_t re_read = fwrite(onewrite2,1,ONEWRITE_SIZE2,file);
+            if(re_read == 0)
+            {
+                qDebug() << "未写入成功";
+//                delete read_data_buff_stop;
+                fclose(file);
+                return 0;
+            }
+            else
+            {
+//                delete read_data_buff_stop;
+                fclose(file);
+            }
+//            if((timenum/8) < 7)
+//            {
+//                for(int i=0;i<ONEWRITE_SIZE2;++i){
+//                    onewrite2[i] = 0;
+//                }
+//                for(int i =1; i<8-(timenum%8); i++)
+//                {
+//                    FILE *file = fopen(aFileName.toStdString().c_str(),"ab");
+//                    if(!file)
+//                    {
+//                        qDebug() << "fail to open the file";
+//                        return 0;
+//                    }
+//                    fseek(file,(timenum+i)*ONEWRITE_SIZE2,SEEK_SET);
+//                    size_t re_read = fwrite(onewrite2,1,ONEWRITE_SIZE2,file);
+//                    if(re_read == 0)
+//                    {
+//                        qDebug() << "未写入成功";
+//        //                delete read_data_buff_stop;
+//                        fclose(file);
+//                        return 0;
+//                    }
+
+//                    fclose(file);
+
+//                }
+
+//            }
+            filenum += 1;
+            writenum = 0;
+            timenum = 0;
+            return filenum;
+
+        }
+    }
+
+    for(int i=0;i<PACKAGE_SIZE;++i){
+        onewrite2[writenum+i] = m_data[i];
+    }
+    writenum += 3;
+
+    if(writenum == ONEWRITE_SIZE2)
+    {
+        FILE *file = fopen(aFileName.toStdString().c_str(),"ab");
+        if(!file)
+        {
+            qDebug() << "fail to open the file";
+            return 0;
+        }
+        fseek(file,timenum*ONEWRITE_SIZE2,SEEK_SET);
+        writenum = 0;
+//        BYTE* read_data_buff = onewrite;
+//        read_data_buff = new BYTE[ONEWRITE_SIZE];  //缓存区
+        size_t re_read = fwrite(onewrite2,1,ONEWRITE_SIZE2,file);
+        if(re_read == 0)
+        {
+//            delete read_data_buff;
+            fclose(file);
+            return 0;
+        }
+//        delete read_data_buff;
+        fclose(file);
+//        qDebug() << "已读入一次数据";
+        timenum++;
+    }
+    if(timenum>=WRITIMES2)
     {
         filenum += 1;
         writenum = 0;

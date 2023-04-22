@@ -10,6 +10,25 @@ wchar_t *QString2Wchar(QString buf)
     return (wchar_t*)reinterpret_cast<const wchar_t *>(buf.utf16());
 }
 
+__int64 myFileSeek (HANDLE hf, __int64 distance, DWORD MoveMethod)//64位寻址地址
+
+{
+
+   LARGE_INTEGER li;
+   li.QuadPart = distance;
+   li.LowPart = SetFilePointer (hf,
+                                li.LowPart,
+                                &li.HighPart,
+                                MoveMethod);
+
+   if (li.LowPart == INVALID_SET_FILE_POINTER && GetLastError()
+       != NO_ERROR)
+   {
+      li.QuadPart = -1;
+   }
+   return li.QuadPart;
+}
+
 void Producer::run(){
     int cnt = 0;
     int sum = 0;
@@ -41,11 +60,16 @@ void Producer::run(){
     while (1) {
         //生产数据
         Point p;
+        qint64 distance = offset+num*datanum+cnt*512*3;
 
         if(sum == 0)
         {
+            //低32位和高32wei
+            //            qint64 low32 = (offset+num*datanum+cnt*512*3)%4294967296;
+            //            qint64 high32 = (offset+num*datanum+cnt*512*3)/4294967296;
             //E00000 14680064
-            SetFilePointer (device, offset+num*datanum+cnt*512*3, NULL, FILE_BEGIN) ;
+//            SetFilePointer (device, offset+num*datanum+cnt*512*3, NULL, FILE_BEGIN) ;
+            myFileSeek (device,distance, FILE_BEGIN);
             if (!ReadFile(device, buff, 512*3, &bytesRead, NULL))
             {
                 qDebug()<<"The file handle is not open";

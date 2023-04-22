@@ -20,7 +20,7 @@ public slots:
 
 public:
     QString address;
-    uint offset;
+    qint64 offset;
     int times;
     int datanum;
     int headnum;
