@@ -204,7 +204,7 @@ void Datread::byteread_pos2(const QString &path,int pos,int len,vector<double> &
 //            int32_t res_7 = ((int32_t)(((uint32_t)(*(window_chenck_p + 21)) << 16 | ((uint32_t)(*(window_chenck_p + 22))) << 8 | (*(window_chenck_p + 23))) << 8)) / 256;
 //        int32_t res_8 = ((int32_t)(((uint32_t)(*(window_chenck_p + 24)) << 16 | ((uint32_t)(*(window_chenck_p + 25))) << 8 | (*(window_chenck_p + 26))) << 8)) / 256;
 
-        window_chenck_p += 3; //指针便宜位置
+        window_chenck_p += 3; //指针偏移位置
         axisX.push_back(axis_time);
         axis_time+= 0.000125;
 

@@ -32,6 +32,7 @@ public slots:
     void plotshowinit(int); //显示首张图片,并记录文件存储情况
     void plotshowinit2(int);
     void plotGraph_view(int);
+    void plotGraph_view2(int);
 
 private:
     Producer *producer;

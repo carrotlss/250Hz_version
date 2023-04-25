@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     initialize_Plot();
     sliderflag = 0;
-    //当滑块松开时发送信号
+    //当滑块松开时发送信号 250Hz
     connect(ui->horizontalSlider,&QSlider::sliderReleased,this,[&](){
     position =int(ui->horizontalSlider->value());
 //        if(length_copy < 5) return;//读取数据小于5s
@@ -20,6 +20,22 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         qDebug() << "emit the signal";
         emit SliderValueChange(position);
+    }
+
+
+        });
+    //当滑块松开时发送信号 8000Hz
+    connect(ui->horizontalSlider_2,&QSlider::sliderReleased,this,[&](){
+    position_2 =int(ui->horizontalSlider_2->value());
+//        if(length_copy < 5) return;//读取数据小于5s
+    if(sliderflag_2)
+    {
+        if(position_2>(isliderlen_2 - 5))//
+        {
+            position_2 = isliderlen_2 - 5;
+        }
+        qDebug() << "emit the signal2";
+        emit SliderValueChange_2(position_2);
     }
 
 
@@ -118,10 +134,15 @@ void MainWindow::initializ_Slider(int length)
 
 //    });
 
-
-
 }
 
+void MainWindow::initializ_Slider_2(int length)
+{
+    isliderlen_2 = length;
+    ui->horizontalSlider_2->initialization = true;
+    ui->horizontalSlider_2->initialize_slider(isliderlen_2);
+    sliderflag_2 = 1;
+}
 //void MainWindow::plotGraph_view(const vector<double> &axisX, const vector<vector<double>> &axisCH)
 //{
 //    ecgGraph_preview->clearAllGraph();
@@ -184,7 +205,7 @@ void MainWindow::plotGraph_preview2(const vector<double> &axisX, const vector<do
     vector<double> X(axisX.begin(),axisX.begin()+(initlen*8000));
     ecgGraph_preview_2->setxAxisRange(X.at(0),X.at(X.size()-1));
     qDebug() << "横轴尺寸" << X.size();
-    ecgGraph_preview_2->setyAxisRange(-10,10);
+    ecgGraph_preview_2->setyAxisRange(-15,15);
 //    ecgGraph_preview->setGrid();
 //    QStringList list = {"1","2","3","4","5","6","7","8"};
     vector<double> Y(axisCH.begin(),axisCH.begin()+(initlen*8000));

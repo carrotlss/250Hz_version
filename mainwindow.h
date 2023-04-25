@@ -31,7 +31,8 @@ public:
 //    QDateTime DateTime;
 
     void initialize_Plot();  //初始化图像
-    void initializ_Slider(int length);//初始化滑块
+    void initializ_Slider(int length);//初始化滑块  250
+    void initializ_Slider_2(int length);//初始化滑块 8000
 //    void plotGraph_view(const vector<double> &axisX,const vector<vector<double>> &axisCH);
 
     //在ui上读取磁盘的相关参数 250Hz
@@ -42,9 +43,12 @@ public:
     int headnum;
     int effnum;
     int idatlength;  //代表所读取的秒数
-    int position; //图像显示的数据位置
-    int isliderlen; //代表滑块长度
+    int position; //图像显示的数据位置 250Hz
+    int position_2; //图像显示的数据位置 8000Hz
+    int isliderlen; //代表滑块长度 250Hz
+    int isliderlen_2; //代表滑块长度 8000Hz
     bool sliderflag; //滑块标志位
+    bool sliderflag_2; //滑块标志位
 
     //8000Hz
     QString address_2;
@@ -76,6 +80,7 @@ signals:
     void readfromdisk();
     void readfromdisk_2();
     void SliderValueChange(int position);
+    void SliderValueChange_2(int position);
 
 };
 

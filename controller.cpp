@@ -11,6 +11,7 @@ Controller::Controller(QObject *parent) : QObject(parent),mainwindow(new MainWin
     connect(mainwindow,&MainWindow::readfromdisk,this,&Controller::startread);
     connect(mainwindow,&MainWindow::readfromdisk_2,this,&Controller::startread_2);
     connect(mainwindow,SIGNAL(SliderValueChange(int)),this,SLOT(plotGraph_view(int)));//刷新图片
+    connect(mainwindow,SIGNAL(SliderValueChange_2(int)),this,SLOT(plotGraph_view2(int)));//刷新图片
 //    position = 0;
 
 }
@@ -68,7 +69,7 @@ void Controller::plotshowinit(int inum)
     QString showpath = "D:\\lusisi\\qt_study\\2023.4.19\\storage\\savedata_0.dat";
     int showpos = 0;
 //    int showlen = 1080000;//5s的长度
-    int showlen = 30000;//5s的长度
+    int showlen = 30000;//5s的长度 24*250*5
     if(savefilenum != inum)
     {
         savefilenum++;
@@ -133,27 +134,6 @@ void Controller::plotshowinit(int inum)
             savefilenum--;
         }
     }
-//    else
-//    {
-//        //重新读取5s数据
-//        datread = new Datread;
-//        datread->axisX=this->axisX;
-//        datread->axisCH=this->axisCH;
-
-//        QString aFileName = QString("D:\\lusisi\\qt_study\\2023.2.6\\storage\\savedata_%1.dat").arg(pos/lenfile);
-//        qDebug() << aFileName;
-//        datread->filepath = aFileName;
-//        datread->pos = (pos%lenfile)*27*8000;
-//        datread->len = 27*8000*5;
-//        connect(datread,&Datread::datready,this,[&](){
-//            datread->quit();
-//            datread->wait();
-//            delete datread;
-//            plotGraph_preview();
-//        });
-//        datread -> start();
-
-//    }
 
 }
 
@@ -280,11 +260,11 @@ void Controller::plotshowinit2(int inum)
             {
                 if(savefilenum2<((idatlength_2-1)/lenfile+1))
                 {
-                    mainwindow ->initializ_Slider(savefilenum2*lenfile);
+                    mainwindow ->initializ_Slider_2(savefilenum2*lenfile);
                 }
                 else
                 {
-                    mainwindow ->initializ_Slider(idatlength_2);
+                    mainwindow ->initializ_Slider_2(idatlength_2);
                 }
             }
             qDebug() << "slider refresh";
@@ -295,4 +275,27 @@ void Controller::plotshowinit2(int inum)
             savefilenum2--;
         }
     }
+}
+
+void Controller::plotGraph_view2(int pos)
+{
+    qDebug() << "plot refresh";
+    //重新读取5s数据
+    datread = new Datread;
+    datread->axisX=this->axisX2;
+    datread->axisCH2=this->axisCH2;
+    QString aFileName = QString("D:\\lusisi\\qt_study\\2023.4.19\\storage\\savedata2_%1.dat").arg(pos/lenfile);
+    qDebug() << aFileName;
+    datread->filepath = aFileName;
+    datread->pos = pos*3*8000;
+    datread->len = 3*8000*5;
+    datread->mode = 2;
+    connect(datread,&Datread::datready,this,[&](){
+        datread->quit();
+        datread->wait();
+        delete datread;
+        qDebug() << "refresh plot";
+        mainwindow->plotGraph_preview2(*axisX2,*axisCH2);
+    });
+    datread -> start();
 }

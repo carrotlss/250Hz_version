@@ -30,7 +30,7 @@ int MyQueue::put(const Point &p){
 }
 int MyQueue::get(Point *p){
     mtx.lock();
-    if(p==nullptr||stopped){
+    if(stopped||p==nullptr){
 
         if(m_data.size()==0)
         {

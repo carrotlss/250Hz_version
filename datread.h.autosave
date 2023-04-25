@@ -17,7 +17,6 @@ public:
     QString filepath;   //文件路径
     vector<double> *axisX;  //横轴
     vector<vector<double>> *axisCH;  //各个导联的值 250Hz
-    vector<double> *axisX2;  //横轴
     vector<double> *axisCH2;  //各个导联的值 8000Hz
     int pos;  //数据在文件中的偏移位置
     int len;  //读取数据
