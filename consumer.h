@@ -12,6 +12,9 @@ class Consumer : public QThread
 public:
     void run();
     int mode;
+    qint64 point;
+    int effnum;
+    int times;
 signals:
     void savdatnum(int);
     void consumerstopflag();

@@ -28,7 +28,6 @@ void Controller::startshow()
 
 void Controller::startread()
 {
-    savefilenum = 0;
     producer = new Producer;
     consumer = new Consumer;
 
@@ -40,6 +39,8 @@ void Controller::startread()
     producer -> effnum = mainwindow -> effnum;
     idatlength = mainwindow -> idatlength;
     consumer -> mode = 1;
+    consumer -> effnum = mainwindow -> effnum;
+    consumer -> times = mainwindow -> times;
 
 
     connect(consumer,SIGNAL(savdatnum(int)),this,SLOT(plotshowinit(int)));
@@ -171,7 +172,7 @@ void Controller::plotGraph_view(int pos)
 
 void Controller::startread_2()
 {
-    savefilenum = 0;
+
     producer_2 = new Producer;
     consumer_2 = new Consumer;
 
@@ -183,6 +184,9 @@ void Controller::startread_2()
     producer_2 -> effnum = mainwindow -> effnum_2;
     idatlength_2 = mainwindow -> idatlength_2;
     consumer_2 -> mode = 2;
+    consumer_2 -> effnum = mainwindow -> effnum_2;
+    consumer_2 -> times = mainwindow -> times_2;
+
 
     connect(consumer_2,SIGNAL(savdatnum(int)),this,SLOT(plotshowinit2(int)));
 

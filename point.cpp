@@ -51,7 +51,7 @@ int Point::savedat(int res){
     //    file = fopen(aFileName.toLocal8Bit().data(),"w+");
 
 
-    if(res!=0)
+    if(res==-1)
     {
         if(writenum == 0)
         {
@@ -95,8 +95,9 @@ int Point::savedat(int res){
 //            }
             filenum++;
             timenum = 0;
-//                qDebug() << filenum;
-            return filenum;
+            int refilenum = filenum;
+            filenum = 0;
+            return refilenum;
         }
         else
         {
@@ -158,7 +159,9 @@ int Point::savedat(int res){
             filenum++;
             writenum = 0;
             timenum = 0;
-            return filenum;
+            int refilenum = filenum;
+            filenum = 0;
+            return refilenum;
 
         }
     }
@@ -199,6 +202,7 @@ int Point::savedat(int res){
         timenum = 0;
 
     }
+
     return filenum;
 }
 
@@ -255,7 +259,9 @@ int Point::savedat2(int res){
 //            }
             filenum += 1;
             timenum = 0;
-            return filenum;
+            int refilenum = filenum;
+            filenum = 0;
+            return refilenum;
         }
         else
         {
@@ -317,7 +323,9 @@ int Point::savedat2(int res){
             filenum += 1;
             writenum = 0;
             timenum = 0;
-            return filenum;
+            int refilenum = filenum;
+            filenum = 0;
+            return refilenum;
 
         }
     }
